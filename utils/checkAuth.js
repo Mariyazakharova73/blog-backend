@@ -1,9 +1,8 @@
-import jwt from "jsonwebtoken";
+ import jwt from "jsonwebtoken";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (req, res, next) => {
   const token = (req.headers.authorization || "").replace(/Bearer\s?/, "");
-  console.log(token);
 
   if (token) {
     try {
@@ -22,5 +21,5 @@ export default (req, res, next) => {
     });
   }
 
-  res.send(token);
+  //res.send(token);
 };
