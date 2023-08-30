@@ -4,6 +4,7 @@ import { registerValidation, loginValidation, postCreateValidation } from "./val
 import { checkAuth, handleErrors } from "./utils/index.js";
 import { UserController, PostController } from "./controllers/index.js";
 import multer from "multer";
+import cors from "cors";
 
 mongoose
   .connect(
@@ -26,6 +27,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
+app.use(cors());
 
 // для чтения json
 app.use(express.json());
