@@ -20,20 +20,22 @@ export const getOne = (req, res) => {
       { _id: postId }, // ищем статью по id
       { $inc: { viewsCount: 1 } }, // увеличивем количество просмотров
       { returnDocument: "after" }
-    ).then((doc, err) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          message: "Не удалось вернуть статью",
-        });
-      }
-      if (!doc) {
-        return res.status(404).json({
-          message: "Статья не найдена",
-        });
-      }
-      res.json(doc);
-    });
+    )
+      .populate("user")
+      .then((doc, err) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            message: "Не удалось вернуть статью",
+          });
+        }
+        if (!doc) {
+          return res.status(404).json({
+            message: "Статья не найдена",
+          });
+        }
+        res.json(doc);
+      });
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -48,7 +50,7 @@ export const create = async (req, res) => {
       title: req.body.title,
       text: req.body.text,
       imageUrl: req.body.imageUrl,
-      tags: req.body.tags,
+      tags: req.body.tags.split(', '),
       user: req.userId,
     });
     // сохраняем в базу данных
@@ -81,7 +83,9 @@ export const remove = async (req, res) => {
       }
       res.json({ success: true });
     });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const update = async (req, res) => {
@@ -94,7 +98,7 @@ export const update = async (req, res) => {
         title: req.body.title,
         imageUrl: req.body.imageUrl,
         user: req.userId,
-        tags: req.body.tags,
+        tags: req.body.tags.split(', '),
       }
     );
     res.json({ success: true });
